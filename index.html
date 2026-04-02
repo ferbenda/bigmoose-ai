@@ -244,10 +244,10 @@ canvas{position:fixed;inset:0;z-index:2;width:100%;height:100%;}
 
 @media (max-width: 640px) {
 
-  /* Moose face more visible on mobile */
+  /* Moose head focused, single image, no duplication */
   .bg {
-    background-position: 28% 18%;
-    background-size: 180%;
+    background-position: 20% 5%;
+    background-size: cover;
   }
 
   /* Under construction — centered */
@@ -263,18 +263,13 @@ canvas{position:fixed;inset:0;z-index:2;width:100%;height:100%;}
     letter-spacing: .12em;
   }
 
-  /* Pills — show colors by default on mobile (no hover) */
-  .pill-blue  { color: rgba(75,158,229,0.9);  background: rgba(75,158,229,0.12);  border-color: rgba(75,158,229,0.4);  }
-  .pill-violet{ color: rgba(183,154,227,0.9); background: rgba(123,94,167,0.12);  border-color: rgba(123,94,167,0.4);  }
-  .pill-green { color: rgba(44,182,125,0.9);  background: rgba(44,182,125,0.12);  border-color: rgba(44,182,125,0.4);  }
-  .pill-yellow{ color: rgba(245,200,66,0.9);  background: rgba(245,200,66,0.12);  border-color: rgba(245,200,66,0.4);  }
-  .pill-orange{ color: rgba(245,136,42,0.9);  background: rgba(245,136,42,0.12);  border-color: rgba(245,136,42,0.4);  }
-  .pill-red   { color: rgba(232,69,69,0.9);   background: rgba(232,69,69,0.12);   border-color: rgba(232,69,69,0.4);   }
-
-  /* Tap active state for pills on mobile */
-  .pill:active {
-    transform: translateY(-1px) scale(0.97);
+  /* Tap active — color activates on touch */
+  .pill.tapped {
+    background: var(--pill-hover-bg);
+    border-color: var(--pill-hover-border);
+    color: var(--pill-hover-color);
     box-shadow: 0 0 14px var(--pill-glow);
+    transform: translateY(-1px);
   }
 
   /* General layout tweaks */
@@ -489,6 +484,16 @@ function frame(ts){
   requestAnimationFrame(frame);
 }
 init();window.addEventListener('resize',init);requestAnimationFrame(frame);
+
+// Mobile tap-to-color pills
+document.querySelectorAll('.pill').forEach(pill => {
+  pill.addEventListener('touchstart', function(e) {
+    const wasOn = this.classList.contains('tapped');
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('tapped'));
+    if (!wasOn) this.classList.add('tapped');
+    e.preventDefault();
+  }, {passive: false});
+});
 
 function go(){
   const i=document.getElementById('em'),t=document.getElementById('thanks');
